@@ -21,6 +21,19 @@ public class Main extends Application {
 		int i;	//Contadores
 		
 		//Administrador
+		// Executar o DML Insert, com os dados no formato correto
+		// Lembrar que o método Liga ao SGBD e abre a BD tictactoe
+		// Só é preciso passar o comando DML (insert, update, delete)
+		
+		//O código do jogador faz automaticamente a iteração
+		/*UtilsSQLConn.mySqlDml("Insert into administrador"					// Tabela Administrador
+				+" (Username, Password, NumVitorias, NumDerrotas, NumEmpates, Carimbo)"		// Nomes Colunas
+				+" Values('"+"123"+"', '"+"123"+"', "+0+", "+0+", "+0+", "+false+")");	// Dados*/
+		/*NOTAS:
+		 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+		 * 2 - os campos numéricos não têm.
+		 * */
+		
 		Globais.listaAdministradores.add(new Administrador(Globais.listaAdministradores.size() + 1, "123", "123", 0, 0, 0));
 		/*
 		//Parâmetros

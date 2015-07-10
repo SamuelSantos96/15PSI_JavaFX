@@ -21,9 +21,13 @@ public class Globais {
 
 	private static String usernameUtilizadorAtivo;
 	
+	private static String passwordUtilizadorAtivo;
+
 	private static int codUtilizadorConvidado;
 	
 	private static String usernameUtilizadorConvidado;
+	
+	private static String passwordUtilizadorConvidado;
 	
 	//Getter e Setters
 	public static int getJogadorAtivo() {
@@ -74,6 +78,23 @@ public class Globais {
 			String usernameUtilizadorConvidado) {
 		Globais.usernameUtilizadorConvidado = usernameUtilizadorConvidado;
 	}
+	
+	public static String getPasswordUtilizadorAtivo() {
+		return passwordUtilizadorAtivo;
+	}
+
+	public static void setPasswordUtilizadorAtivo(String passwordUtilizadorAtivo) {
+		Globais.passwordUtilizadorAtivo = passwordUtilizadorAtivo;
+	}
+
+	public static String getPasswordUtilizadorConvidado() {
+		return passwordUtilizadorConvidado;
+	}
+
+	public static void setPasswordUtilizadorConvidado(
+			String passwordUtilizadorConvidado) {
+		Globais.passwordUtilizadorConvidado = passwordUtilizadorConvidado;
+	}
 
 	//Listas
 	public static ObservableList<Jogador> listaJogadores = FXCollections.observableArrayList();
@@ -123,6 +144,6 @@ public class Globais {
 		
 		return listaRecContas;
 		
-	}	
+	}
 	
 }

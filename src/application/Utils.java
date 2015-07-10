@@ -1,5 +1,7 @@
 package application;
 
+import java.sql.Connection;
+
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -36,42 +38,54 @@ import javafx.util.Callback;
 
 public class Utils {
 	
-	static Label label1 = new Label("1"); 				//Cria a label para mostra
-	static Label label2 = new Label("2"); 				//Cria a label para mostra
-	static Label label3 = new Label("3"); 				//Cria a label para mostra
-	static Label label4 = new Label("4"); 				//Cria a label para mostra
-	static Label label5 = new Label("5"); 				//Cria a label para mostra
-	static Label label6 = new Label("6"); 				//Cria a label para mostra
-	static Label label7 = new Label("7"); 				//Cria a label para mostra
-	static Label label8 = new Label("8"); 				//Cria a label para mostra
-	static Label label9 = new Label("9"); 				//Cria a label para mostra
+	static Label label1 = new Label("1"); 					//Cria a label para mostra
+	static Label label2 = new Label("2"); 					//Cria a label para mostra
+	static Label label3 = new Label("3"); 					//Cria a label para mostra
+	static Label label4 = new Label("4"); 					//Cria a label para mostra
+	static Label label5 = new Label("5"); 					//Cria a label para mostra
+	static Label label6 = new Label("6"); 					//Cria a label para mostra
+	static Label label7 = new Label("7"); 					//Cria a label para mostra
+	static Label label8 = new Label("8"); 					//Cria a label para mostra
+	static Label label9 = new Label("9"); 					//Cria a label para mostra
 	
-	static boolean resposta;							//Variável de confirmação a escolha do utilizador
+	static boolean resposta;								//Variável de confirmação a escolha do utilizador
 
-	static boolean recConta;							//Variável de confirmação da recuperação de conta
+	static boolean recConta;								//Variável de confirmação da recuperação de conta
 	
-	static int codRecConta;								//Variável de confirmação da recuperação de conta
+	static int codRecConta;									//Variável de confirmação da recuperação de conta
 	
-	static boolean criacaoNegada;						//Verifica se a criação é ou não negada
+	static boolean criacaoNegada;							//Verifica se a criação é ou não negada
 	
-	static boolean recNegada;							//Verifica se a recuperação é ou não negada
+	static boolean recNegada;								//Verifica se a recuperação é ou não negada
 	
-	static boolean alterarUtilizador = false;			//Verifica se a alteração está a decorrer
+	static boolean alterarUtilizador = false;				//Verifica se a alteração está a decorrer
 	
-	static boolean anularUtilizador = false;			//Verifica se a anulação está a decorrer
+	static boolean anularUtilizador = false;				//Verifica se a anulação está a decorrer
 	
-	static boolean alterarParametro = false;			//Verifica se a alteração está a decorrer
+	static boolean alterarParametro = false;				//Verifica se a alteração está a decorrer
 	
-	static boolean anularParametro = false;				//Verifica se a anulação está a decorrer
+	static boolean anularParametro = false;					//Verifica se a anulação está a decorrer
 	
-	//static int recContaPassword;						//Guarda a password da conta da recuperação da conta
+	static Jogador jogadorSelecionado = null;				//Recebe o jogador selecionado da lista, para alteração/eliminação
 	
-	static int 	i;										//Contador
+	static Parametrizador parametrizadorSelecionado = null;	//Recebe o parametrizador selecionado da lista, para alteração/eliminação
 	
-	static boolean 	loginJogador = false,				//Variável de indicação de login feito por jogador
-					loginAdministrador = false,			//Variável de indicação de login feito por administrador
-					loginParametrizador = false,		//Variável de indicação de login feito por parametrizador
-					loginDoConvidado = false;			//Variável de indicação de login feito pelo convidado
+	static Jogo jogoSelecionado = null;
+	
+	static Parametro parametroSelecionado = null;
+	
+	static Recuperacao recuperacaoSelecionado = null;
+	
+	static Connection conn = null;							// Ligação a base de dados
+	
+	//static int recContaPassword;							//Guarda a password da conta da recuperação da conta
+	
+	static int 	i;											//Contador
+	
+	static boolean 	loginJogador = false,					//Variável de indicação de login feito por jogador
+					loginAdministrador = false,				//Variável de indicação de login feito por administrador
+					loginParametrizador = false,			//Variável de indicação de login feito por parametrizador
+					loginDoConvidado = false;				//Variável de indicação de login feito pelo convidado
 					
 	static Image image1 = new Image("file:images\\question-mark-dude.png");		//Cria uma Image
 	static Image image2 = new Image("file:images\\question-mark-dude.png");		//Cria uma Image
@@ -179,12 +193,13 @@ public class Utils {
 				}
 				else {
 					//Estrutura de controlo para verificar se o username e password estão na lista de jogadores
-					for(i = 0; i < Globais.listaJogadores.size(); i++) {
+					/*for(i = 0; i < Globais.listaJogadores.size(); i++) {
 						if(Globais.listaJogadores.get(i).getUsername().equals(textFieldUserName.getText()) &&
 						   Globais.listaJogadores.get(i).getPassword().equals(passwordFieldPassword.getText())) {
 							loginDoConvidado = true;
 							Globais.setCodUtilizadorConvidado(Globais.listaJogadores.get(i).getCodJogador());
 							Globais.setUsernameUtilizadorConvidado(Globais.listaJogadores.get(i).getUsername());
+							Globais.setPasswordUtilizadorConvidado(Globais.listaJogadores.get(i).getPassword());
 						}					
 					}
 					//Estrutura de controlo para verificar se o username e password estão na lista de administradores
@@ -194,8 +209,45 @@ public class Utils {
 							loginDoConvidado = true;
 							Globais.setCodUtilizadorConvidado(Globais.listaAdministradores.get(i).getCodAdmin());
 							Globais.setUsernameUtilizadorConvidado(Globais.listaAdministradores.get(i).getUsername());
+							Globais.setPasswordUtilizadorConvidado(Globais.listaAdministradores.get(i).getPassword());
+						}
+					}*/
+					
+					//Estrutura de controlo para verificar se o username e password estão na lista de jogadores
+					for(i = 0; i < UtilsSQLConn.carregaListaJogadores().size(); i++) {
+						if(UtilsSQLConn.carregaListaJogadores().get(i).getUsername().equals(textFieldUserName.getText()) &&
+						   UtilsSQLConn.carregaListaJogadores().get(i).getPassword().equals(passwordFieldPassword.getText())) {
+							Globais.setCodUtilizadorConvidado(UtilsSQLConn.carregaListaJogadores().get(i).getCodJogador());
+							Globais.setUsernameUtilizadorConvidado(UtilsSQLConn.carregaListaJogadores().get(i).getUsername());
+							Globais.setPasswordUtilizadorConvidado(UtilsSQLConn.carregaListaJogadores().get(i).getPassword());
+							loginDoConvidado = true;
 						}
 					}
+					//System.out.println(textFieldUserName.getText());
+					//System.out.println(passwordFieldPassword.getText());
+					//Estrutura de controlo para verificar se o username e password estão na lista de administradores
+					for(i = 0; i < UtilsSQLConn.carregaListaAdministradores().size(); i++) {
+						if(UtilsSQLConn.carregaListaAdministradores().get(i).getUsername().equals(textFieldUserName.getText()) &&
+								UtilsSQLConn.carregaListaAdministradores().get(i).getPassword().equals(passwordFieldPassword.getText())) {
+							Globais.setCodUtilizadorConvidado(UtilsSQLConn.carregaListaAdministradores().get(i).getCodAdmin());
+							Globais.setUsernameUtilizadorConvidado(UtilsSQLConn.carregaListaAdministradores().get(i).getUsername());
+							Globais.setPasswordUtilizadorConvidado(UtilsSQLConn.carregaListaAdministradores().get(i).getPassword());
+							loginDoConvidado = true;
+						}
+					}
+					/*
+					if(UtilsSQLConn.mySqlQweryCheckPK("Select * from Jogador WHERE username = "+textFieldUserName.getText()+" and password = "+passwordFieldPassword.getText()+"")){
+						//Utils.alertBox("BD", "Utilizador já existe");
+						Globais.setCodUtilizadorConvidado(Globais.listaAdministradores.get(i).getCodAdmin());
+						Globais.setUsernameUtilizadorConvidado(textFieldUserName.getText());
+						Globais.setPasswordUtilizadorConvidado(passwordFieldPassword.getText());
+					}
+					else if(UtilsSQLConn.mySqlQweryCheckPK("Select * from Administrador WHERE username = "+textFieldUserName.getText()+" and password = "+passwordFieldPassword.getText()+"")){
+						//Utils.alertBox("BD", "Utilizador já existe");
+						Globais.setCodUtilizadorConvidado(Globais.listaAdministradores.get(i).getCodAdmin());
+						Globais.setUsernameUtilizadorConvidado(textFieldUserName.getText());
+						Globais.setPasswordUtilizadorConvidado(passwordFieldPassword.getText());
+					}*/
 									
 					//Se o login do convidado foi feito
 					if(loginDoConvidado == true) {						
@@ -283,12 +335,44 @@ public class Utils {
 			else
 			{
 				//Estrutura de controlo para verificar se o username e password estão na lista de jogadores
-				for(i = 0; i < Globais.listaJogadores.size(); i++) {
+				for(i = 0; i < UtilsSQLConn.carregaListaJogadores().size(); i++) {
+					if(UtilsSQLConn.carregaListaJogadores().get(i).getUsername().equals(textFieldUserName.getText()) &&
+					   UtilsSQLConn.carregaListaJogadores().get(i).getPassword().equals(passwordFieldPassword.getText())) {
+						loginJogador = true;
+						Globais.setCodUtilizadorAtivo(UtilsSQLConn.carregaListaJogadores().get(i).getCodJogador());
+						Globais.setUsernameUtilizadorAtivo(UtilsSQLConn.carregaListaJogadores().get(i).getUsername());
+						Globais.setPasswordUtilizadorAtivo(UtilsSQLConn.carregaListaJogadores().get(i).getPassword());
+					}
+				}
+				//System.out.println(textFieldUserName.getText());
+				//System.out.println(passwordFieldPassword.getText());
+				//Estrutura de controlo para verificar se o username e password estão na lista de administradores
+				for(i = 0; i < UtilsSQLConn.carregaListaAdministradores().size(); i++) {
+					if(UtilsSQLConn.carregaListaAdministradores().get(i).getUsername().equals(textFieldUserName.getText()) &&
+						UtilsSQLConn.carregaListaAdministradores().get(i).getPassword().equals(passwordFieldPassword.getText())) {
+						loginAdministrador = true;
+						Globais.setCodUtilizadorAtivo(UtilsSQLConn.carregaListaAdministradores().get(i).getCodAdmin());
+						Globais.setUsernameUtilizadorAtivo(UtilsSQLConn.carregaListaAdministradores().get(i).getUsername());
+						Globais.setPasswordUtilizadorAtivo(UtilsSQLConn.carregaListaAdministradores().get(i).getPassword());
+					}
+				}
+				//Estrutura de controlo para verificar se o username e password estão na lista de parametrizadores
+				for(i = 0; i < UtilsSQLConn.carregaListaParametrizador().size(); i++) {
+					if(UtilsSQLConn.carregaListaParametrizador().get(i).getUsername().equals(textFieldUserName.getText()) &&
+					   UtilsSQLConn.carregaListaParametrizador().get(i).getPassword().equals(passwordFieldPassword.getText())) {
+						loginParametrizador = true;
+						Globais.setCodUtilizadorAtivo(UtilsSQLConn.carregaListaParametrizador().get(i).getCodParametrizador());
+						Globais.setUsernameUtilizadorAtivo(UtilsSQLConn.carregaListaParametrizador().get(i).getUsername());
+						Globais.setPasswordUtilizadorAtivo(UtilsSQLConn.carregaListaParametrizador().get(i).getPassword());
+					}
+				}
+				/*for(i = 0; i < Globais.listaJogadores.size(); i++) {
 					if(Globais.listaJogadores.get(i).getUsername().equals(textFieldUserName.getText()) &&
 					   Globais.listaJogadores.get(i).getPassword().equals(passwordFieldPassword.getText())) {
 						loginJogador = true;
 						Globais.setCodUtilizadorAtivo(Globais.listaJogadores.get(i).getCodJogador());
 						Globais.setUsernameUtilizadorAtivo(Globais.listaJogadores.get(i).getUsername());
+						Globais.setPasswordUtilizadorAtivo(Globais.listaJogadores.get(i).getPassword());
 					}
 				}
 				//System.out.println(textFieldUserName.getText());
@@ -300,6 +384,7 @@ public class Utils {
 						loginAdministrador = true;
 						Globais.setCodUtilizadorAtivo(Globais.listaAdministradores.get(i).getCodAdmin());
 						Globais.setUsernameUtilizadorAtivo(Globais.listaAdministradores.get(i).getUsername());
+						Globais.setPasswordUtilizadorAtivo(Globais.listaAdministradores.get(i).getPassword());
 					}
 				}
 				//Estrutura de controlo para verificar se o username e password estão na lista de parametrizadores
@@ -309,9 +394,32 @@ public class Utils {
 						loginParametrizador = true;
 						Globais.setCodUtilizadorAtivo(Globais.listaParametrizadores.get(i).getCodParametrizador());
 						Globais.setUsernameUtilizadorAtivo(Globais.listaParametrizadores.get(i).getUsername());
+						Globais.setPasswordUtilizadorAtivo(Globais.listaParametrizadores.get(i).getPassword());
 					}
+				}*/
+				/*
+				if(UtilsSQLConn.mySqlQweryCheckPK("Select username from Jogador WHERE username = "+textFieldUserName.getText()+" and password = "+passwordFieldPassword.getText()+"")){
+					//Utils.alertBox("BD", "Utilizador já existe");
+					loginJogador = true;
+					Globais.setCodUtilizadorAtivo(Globais.listaParametrizadores.get(i).getCodParametrizador());
+					Globais.setUsernameUtilizadorAtivo(textFieldUserName.getText());
+					Globais.setPasswordUtilizadorAtivo(passwordFieldPassword.getText());
+					
+				}else if(UtilsSQLConn.mySqlQweryCheckPK("Select username from Parametrizador WHERE username = "+textFieldUserName.getText()+" and password = "+passwordFieldPassword.getText()+"")){
+					//Utils.alertBox("BD", "Utilizador já existe");
+					loginParametrizador = true;
+					Globais.setCodUtilizadorAtivo(Globais.listaParametrizadores.get(i).getCodParametrizador());
+					Globais.setUsernameUtilizadorAtivo(textFieldUserName.getText());
+					Globais.setPasswordUtilizadorAtivo(passwordFieldPassword.getText());
 				}
-								
+				else if(UtilsSQLConn.mySqlQweryCheckPK("Select username from Administrador WHERE username = "+textFieldUserName.getText()+" and password = "+passwordFieldPassword.getText()+"")){
+					//Utils.alertBox("BD", "Utilizador já existe");
+					loginAdministrador = true;
+					Globais.setCodUtilizadorAtivo(Globais.listaParametrizadores.get(i).getCodParametrizador());
+					Globais.setUsernameUtilizadorAtivo(textFieldUserName.getText());
+					Globais.setPasswordUtilizadorAtivo(passwordFieldPassword.getText());
+				}
+				*/				
 				//Se o login foi feito por um jogador
 				if(loginJogador == true) {
 					loginAdministrador = false;
@@ -336,7 +444,7 @@ public class Utils {
 				//Se os dados não correspondem a nenhum dos indivíduos acima referidos envia uma mensagem de erro
 				else if(loginJogador == false && loginAdministrador == false && loginParametrizador == false) {					
 					janelaLogin.hide();
-					errorBox("Erro", "Um ou mais dados incorretos!", "Recuperar Conta", "Fazer Login");					
+					errorBox("Erro", "Um ou mais dados incorretos!", "Recuperar Conta", "Fazer Login");
 					if(recConta == true) {
 						recuperarConta();
 						recConta = false;
@@ -820,17 +928,43 @@ public class Utils {
 			Button btnApagar = new Button("Apagar");
 			btnApagar.setOnAction(e -> {
 				//Vamos apanhar o item selecionado e compara-lo com a lista de Alunos
-				
+				/*
 				ObservableList<Jogador> jogadorselected, listaJogadores;
 				listaJogadores = tabelaJogadores.getItems();
 				jogadorselected = tabelaJogadores.getSelectionModel().getSelectedItems();
 				jogadorselected.forEach(listaJogadores::remove);
+				*/
+				
+				ObservableList<Jogador> itemSelecionado = tabelaJogadores.getSelectionModel().getSelectedItems();
+				jogadorSelecionado = itemSelecionado.get(0);
+				UtilsSQLConn.mySqlDml("Delete from Jogador where codJogador = "+jogadorSelecionado.getCodJogador()+" ");
+				
 			});
 			
+			//TextFieldJogador E Password
+			TextField textFieldUserName = new TextField();
+			textFieldUserName.setPromptText("Username");
+			PasswordField passwordFieldPassword = new PasswordField();
+			passwordFieldPassword.setPromptText("Password");
 			//Botão Alterar
 			Button btnAlterar = new Button("Alterar");
 			btnAlterar.setOnAction(e -> {
-				//Alterar
+				if(textFieldUserName.getText().equals("") || passwordFieldPassword.getText().equals("")) {
+					alertBox("Erro", "Um ou mais campos nulos!");
+				}
+				else {
+					ObservableList<Jogador> itemSelecionado = tabelaJogadores.getSelectionModel().getSelectedItems();
+					jogadorSelecionado = itemSelecionado.get(0);
+					// altera os dados para o nProc do item selecionado
+					UtilsSQLConn.mySqlDml("Update Jogador set"
+							+ " Username 	= '"+textFieldUserName.getText()+"', "			// aspas em numéricos
+							+ " Password 	= '"+passwordFieldPassword.getText()+"' "			// aspas e plicas em strings
+							+ " where codJogador = "+jogadorSelecionado.getCodJogador()+" ");			
+					/*NOTAS:
+					 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+					 * 2 - os campos numéricos não têm.
+					 * */
+				}
 			});
 			
 			//Associar as colunas à tabela
@@ -844,7 +978,7 @@ public class Utils {
 			}
 			
 			//Carregar a lista com dados
-			tabelaJogadores.setItems( Globais.carregarListaJogadores() );
+			tabelaJogadores.setItems( UtilsSQLConn.carregaListaJogadores() );
 			
 			//Preparação da janela
 			StackPane layout = new StackPane();
@@ -858,7 +992,7 @@ public class Utils {
 			//layoutSub.getChildren().addAll(tabelaJogadores, layoutEdit);
 						
 			if(alterarUtilizador == true) {
-				layoutEdit.getChildren().addAll(btnAlterar);
+				layoutEdit.getChildren().addAll(textFieldUserName, passwordFieldPassword, btnAlterar);
 				layoutSub.getChildren().addAll(tabelaJogadores, layoutEdit);
 			}
 			else if(anularUtilizador == true) {
@@ -944,7 +1078,6 @@ public class Utils {
 			colunaEmpates.setMinWidth(200);
 			colunaEmpates.setCellValueFactory(new PropertyValueFactory<>("numEmpates"));
 			
-			
 			//Associar as colunas à tabela
 			//Se o utilizador for jogador apresenta a lista de jogadores sem passwords
 			if(loginJogador == true  || loginParametrizador == true) {
@@ -956,7 +1089,7 @@ public class Utils {
 			}
 			
 			//Carregar a lista com dados
-			tabelaJogadores.setItems( Globais.carregarListaJogadores() );
+			tabelaJogadores.setItems( UtilsSQLConn.carregaListaJogadores() );
 			
 			//Preparação da janela
 			StackPane layout = new StackPane();
@@ -1024,6 +1157,22 @@ public class Utils {
 			colunaResultado.setMinWidth(200);
 			colunaResultado.setCellValueFactory(new PropertyValueFactory<>("resultado"));
 			
+			//Botão Apagar
+			Button btnApagar = new Button("Apagar");
+			btnApagar.setOnAction(e -> {
+				//Vamos apanhar o item selecionado e compara-lo com a lista de Alunos
+				/*
+				ObservableList<Jogador> jogadorselected, listaJogadores;
+				listaJogadores = tabelaJogadores.getItems();
+				jogadorselected = tabelaJogadores.getSelectionModel().getSelectedItems();
+				jogadorselected.forEach(listaJogadores::remove);
+				*/
+				
+				ObservableList<Jogo> itemSelecionado = tabelaJogos.getSelectionModel().getSelectedItems();
+				jogoSelecionado = itemSelecionado.get(0);
+				UtilsSQLConn.mySqlDml("Delete from Jogar where codJogo = "+Globais.getCodUtilizadorAtivo()+" ");
+			});
+			
 			//Associar as colunas à tabela
 			//Se o utilizador for jogador apresenta a lista de jogadores sem passwords
 			if(loginJogador == true || loginParametrizador == true) {
@@ -1035,8 +1184,39 @@ public class Utils {
 			}
 			
 			//Carregar a lista com dados
-			tabelaJogos.setItems( Globais.carregarListaJogos() );
+			tabelaJogos.setItems( UtilsSQLConn.carregaListaJogos() );
 			
+			//Preparação da janela
+			StackPane layout = new StackPane();
+			layout.setPadding(new Insets(20, 20, 20, 20));
+			
+			HBox layoutEdit = new HBox(10);
+			layoutEdit.setPadding(new Insets(10, 10, 10, 10));
+			//layoutEdit.setAlignment(Pos.BOTTOM_RIGHT);
+			
+			VBox layoutSub = new VBox(10);
+			//layoutSub.getChildren().addAll(tabelaJogadores, layoutEdit);
+						
+			if(alterarUtilizador == true) {
+				//layoutEdit.getChildren().addAll(btnAlterar);
+				//layoutSub.getChildren().addAll(tabelaJogos, layoutEdit);
+				layoutSub.getChildren().add(tabelaJogos);
+			}
+			else if(anularUtilizador == true) {
+				layoutEdit.getChildren().addAll(btnApagar);
+				layoutSub.getChildren().addAll(tabelaJogos, layoutEdit);
+			}
+			else {
+				layoutSub.getChildren().add(tabelaJogos);
+			}
+						
+			//Scene scene = new Scene(layout, 400, 400);
+			layout.getChildren().add(layoutSub);
+			Scene scene = new Scene(layout);
+			janelaListaJogadores.setScene(scene);
+			janelaListaJogadores.setTitle("Lista de Jogos");
+			janelaListaJogadores.show();
+			/*
 			//Preparação da janela
 			StackPane layout = new StackPane();
 			layout.setPadding(new Insets(20, 20, 20, 20));
@@ -1046,7 +1226,7 @@ public class Utils {
 			Scene scene = new Scene(layout);
 			janelaListaJogadores.setScene(scene);
 			janelaListaJogadores.setTitle("Lista de Jogos");
-			janelaListaJogadores.show();
+			janelaListaJogadores.show();*/
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -1098,17 +1278,45 @@ public class Utils {
 			Button btnApagar = new Button("Apagar");
 			btnApagar.setOnAction(e -> {
 				//Vamos apanhar o item selecionado e compara-lo com a lista de Alunos
-				
+				/*
 				ObservableList<Parametro> parametroselected, listaDeVarDeLimites;
 				listaDeVarDeLimites = tabelaVar.getItems();
 				parametroselected = tabelaVar.getSelectionModel().getSelectedItems();
 				parametroselected.forEach(listaDeVarDeLimites::remove);
+				*/
+				
+				ObservableList<Parametro> itemSelecionado = tabelaVar.getSelectionModel().getSelectedItems();
+				parametroSelecionado = itemSelecionado.get(0);
+				UtilsSQLConn.mySqlDml("Delete from Parametrizacao where codParametro = "+parametroSelecionado.getCodParametro()+" ");
 			});
 			
+			//TextFieldJogador E Password
+			TextField textFieldTipoVar = new TextField();
+			textFieldTipoVar.setPromptText("Varivel");
+			TextField textFieldTipoMin = new TextField();
+			textFieldTipoMin.setPromptText("Mínimo");
+			TextField textFieldTipoMax = new TextField();
+			textFieldTipoMax.setPromptText("Máximo");
 			//Botão Alterar
 			Button btnAlterar = new Button("Alterar");
 			btnAlterar.setOnAction(e -> {
-				//Alterar
+				if(textFieldTipoVar.getText().equals("") || textFieldTipoMin.getText().equals("") || textFieldTipoMax.getText().equals("")) {
+					alertBox("Erro", "Um ou mais campos nulos!");
+				}
+				else {
+					ObservableList<Parametro> itemSelecionado = tabelaVar.getSelectionModel().getSelectedItems();
+					parametroSelecionado = itemSelecionado.get(0);
+					// altera os dados para o nProc do item selecionado
+					UtilsSQLConn.mySqlDml("Update Aluno set"
+							+ " TipoVar 	= '"+textFieldTipoVar.getText()+"', "			// aspas em numéricos
+							+ " LimiteMin 	= '"+textFieldTipoMin.getText()+"' "		// aspas e plicas em strings
+							+ " LimiteMin 	= '"+textFieldTipoMax.getText()+"' "		// aspas e plicas em strings
+							+ " where codParametro = "+parametroSelecionado.getCodParametro()+" ");			
+					/*NOTAS:
+					 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+					 * 2 - os campos numéricos não têm.
+					 * */
+				}
 			});
 						
 			//Associar as colunas à tabela
@@ -1116,7 +1324,7 @@ public class Utils {
 			tabelaVar.getColumns().addAll(colunaCodParametro, colunaCodVar, colunaVar, colunaTipoVar, colunaLimiteMax, colunaLimiteMin);
 			
 			//Carregar a lista com dados
-			tabelaVar.setItems( Globais.carregarListaVarLimites() );
+			tabelaVar.setItems( UtilsSQLConn.carregaListaVarLimites() );
 			
 			/*//Preparação da janela
 			StackPane layout = new StackPane();
@@ -1135,7 +1343,7 @@ public class Utils {
 			//layoutSub.getChildren().addAll(tabelaJogadores, layoutEdit);
 						
 			if(alterarParametro == true) {
-				layoutEdit.getChildren().addAll(btnAlterar);
+				layoutEdit.getChildren().addAll(textFieldTipoVar, textFieldTipoMin, textFieldTipoMax, btnAlterar);
 				layoutSub.getChildren().addAll(tabelaVar, layoutEdit);
 			}
 			else if(anularParametro == true) {
@@ -1187,13 +1395,65 @@ public class Utils {
 			colunaPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
 			//Nome do atributo, na ObservableList, onde vai ler os dados
 						
+			//Botão Apagar
+			Button btnApagar = new Button("Apagar");
+			btnApagar.setOnAction(e -> {
+				//Vamos apanhar o item selecionado e compara-lo com a lista de Alunos
+				/*
+				ObservableList<Jogador> jogadorselected, listaJogadores;
+				listaJogadores = tabelaJogadores.getItems();
+				jogadorselected = tabelaJogadores.getSelectionModel().getSelectedItems();
+				jogadorselected.forEach(listaJogadores::remove);
+				*/
+				
+				ObservableList<Recuperacao> itemSelecionado = tabelaRecContas.getSelectionModel().getSelectedItems();
+				recuperacaoSelecionado = itemSelecionado.get(0);
+				UtilsSQLConn.mySqlDml("Delete from Recuperacao where codContaRec = "+recuperacaoSelecionado.getCodContaRec()+" ");
+			});
+			
 			//Associar as colunas à tabela
 			//Se o utilizador for jogador apresenta a lista de jogadores sem passwords
 			tabelaRecContas.getColumns().addAll(colunaCodPedido, colunaCodJogador, colunaUsername, colunaPassword);
 			
 			//Carregar a lista com dados
-			tabelaRecContas.setItems( Globais.carregarListaRecContas() );
+			tabelaRecContas.setItems( UtilsSQLConn.carregaListaRecContas() );
 			
+			/*//Preparação da janela
+			StackPane layout = new StackPane();
+			layout.setPadding(new Insets(20, 20, 20, 20));
+			layout.getChildren().add(tabelaVar);*/
+			
+			//Preparação da janela
+			StackPane layout = new StackPane();
+			layout.setPadding(new Insets(20, 20, 20, 20));
+			
+			HBox layoutEdit = new HBox(10);
+			layoutEdit.setPadding(new Insets(10, 10, 10, 10));
+			//layoutEdit.setAlignment(Pos.BOTTOM_RIGHT);
+			
+			VBox layoutSub = new VBox(10);
+			//layoutSub.getChildren().addAll(tabelaJogadores, layoutEdit);
+						
+			if(alterarParametro == true) {
+				//layoutEdit.getChildren().addAll(btnAlterar);
+				//layoutSub.getChildren().addAll(tabelaRecContas, layoutEdit);
+				layoutSub.getChildren().add(tabelaRecContas);
+			}
+			else if(anularParametro == true) {
+				layoutEdit.getChildren().addAll(btnApagar);
+				layoutSub.getChildren().addAll(tabelaRecContas, layoutEdit);
+			}
+			else {
+				layoutSub.getChildren().add(tabelaRecContas);
+			}
+			
+			//Scene scene = new Scene(layout, 700, 400);			
+			layout.getChildren().add(layoutSub);
+			Scene scene = new Scene(layout);
+			janelaListaRecContas.setScene(scene);
+			janelaListaRecContas.setTitle("Lista de Pedidos de Recuperação de Contas");
+			janelaListaRecContas.show();
+			/*
 			//Preparação da janela
 			StackPane layout = new StackPane();
 			layout.setPadding(new Insets(20, 20, 20, 20));
@@ -1203,7 +1463,7 @@ public class Utils {
 			Scene scene = new Scene(layout);
 			janelaListaRecContas.setScene(scene);
 			janelaListaRecContas.setTitle("Lista de Pedidos de Recuperação de Contas");
-			janelaListaRecContas.show();
+			janelaListaRecContas.show();*/
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -1237,17 +1497,41 @@ public class Utils {
 			Button btnApagar = new Button("Apagar");
 			btnApagar.setOnAction(e -> {
 				//Vamos apanhar o item selecionado e compara-lo com a lista de Alunos
-				
+				/*
 				ObservableList<Parametrizador> parametrizadorselected, listaDeParametrizadores;
 				listaDeParametrizadores = tabelaParametrizador.getItems();
 				parametrizadorselected = tabelaParametrizador.getSelectionModel().getSelectedItems();
-				parametrizadorselected.forEach(listaDeParametrizadores::remove);
+				parametrizadorselected.forEach(listaDeParametrizadores::remove);*/
+				
+				ObservableList<Parametrizador> itemSelecionado = tabelaParametrizador.getSelectionModel().getSelectedItems();
+				parametrizadorSelecionado = itemSelecionado.get(0);
+				UtilsSQLConn.mySqlDml("Delete from Parametrizador where codParametrizador = "+parametrizadorSelecionado.getCodParametrizador()+" ");
 			});
 			
+			//TextFieldJogador E Password
+			TextField textFieldUserName = new TextField();
+			textFieldUserName.setPromptText("Username");
+			PasswordField passwordFieldPassword = new PasswordField();
+			passwordFieldPassword.setPromptText("Password");
 			//Botão Alterar
 			Button btnAlterar = new Button("Alterar");
 			btnAlterar.setOnAction(e -> {
-				//Alterar
+				if(textFieldUserName.getText().equals("") || passwordFieldPassword.getText().equals("")) {
+					alertBox("Erro", "Um ou mais campos nulos!");
+				}
+				else {
+					ObservableList<Parametrizador> itemSelecionado = tabelaParametrizador.getSelectionModel().getSelectedItems();
+					parametrizadorSelecionado = itemSelecionado.get(0);
+					// altera os dados para o nProc do item selecionado
+					UtilsSQLConn.mySqlDml("Update Parametrizador set"
+							+ " Username 	= '"+textFieldUserName.getText()+"', "			// aspas em numéricos
+							+ " Password 	= '"+passwordFieldPassword.getText()+"' "		// aspas e plicas em strings
+							+ " where codParametrizador = "+parametrizadorSelecionado.getCodParametrizador()+" ");			
+					/*NOTAS:
+					 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+					 * 2 - os campos numéricos não têm.
+					 * */
+				}
 			});
 								
 			//Nome do atributo, na ObservableList, onde vai ler os dados
@@ -1257,7 +1541,7 @@ public class Utils {
 			tabelaParametrizador.getColumns().addAll(colunaCodParametrizador, colunaUsername, colunaPassword);
 			
 			//Carregar a lista com dados
-			tabelaParametrizador.setItems( Globais.carregarListaParametrizador() );
+			tabelaParametrizador.setItems( UtilsSQLConn.carregaListaParametrizador() );
 			
 			/*//Preparação da janela
 			StackPane layout = new StackPane();
@@ -1276,7 +1560,7 @@ public class Utils {
 			//layoutSub.getChildren().addAll(tabelaJogadores, layoutEdit);
 						
 			if(alterarUtilizador == true) {
-				layoutEdit.getChildren().addAll(btnAlterar);
+				layoutEdit.getChildren().addAll(textFieldUserName, passwordFieldPassword, btnAlterar);
 				layoutSub.getChildren().addAll(tabelaParametrizador, layoutEdit);
 			}
 			else if(anularUtilizador == true) {
@@ -1876,13 +2160,27 @@ public class Utils {
 		//Se o jogador x ganhou
 		if(Globais.getVencedor() == 1) {
 			//Cria o registo do jogo
-			Globais.listaJogos.add(new Jogo(Globais.listaJogos.size() + 1, Globais.getCodUtilizadorAtivo(), Globais.getCodUtilizadorConvidado(), Globais.getUsernameUtilizadorAtivo(), Globais.getUsernameUtilizadorConvidado(), "Player1 Ganhou"));
+			
+			// Executar o DML Insert, com os dados no formato correto
+			// Lembrar que o método Liga ao SGBD e abre a BD tictactoe
+			// Só é preciso passar o comando DML (insert, update, delete)
+			//O código do jogador faz automaticamente a iteração
+			//System.out.println(Globais.getCodUtilizadorAtivo() + " " + Globais.getCodUtilizadorConvidado() + " " + Globais.getUsernameUtilizadorAtivo() + " " + Globais.getUsernameUtilizadorConvidado() + " " + Globais.getPasswordUtilizadorAtivo() + " " + Globais.getPasswordUtilizadorConvidado());
+			UtilsSQLConn.mySqlDml("Insert into jogar"				// Tabela jogar
+					+" (CodJogador1, CodJogador2, UsernameJogador1, UsernameJogador2, PasswordJogador1, PasswordJogador2, Resultado, Carimbo)"	// Nomes Colunas
+					+" Values("+Globais.getCodUtilizadorAtivo()+", "+Globais.getCodUtilizadorConvidado()+", '"+Globais.getUsernameUtilizadorAtivo()+"', '"+Globais.getUsernameUtilizadorConvidado()+"', '"+Globais.getPasswordUtilizadorAtivo()+"', '"+Globais.getPasswordUtilizadorConvidado()+"', '"+"Player1 Ganhou"+"', "+false+")");	// Dados
+			/*NOTAS:
+			 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+			 * 2 - os campos numéricos não têm.
+			 * */
+			
+			//Globais.listaJogos.add(new Jogo(Globais.listaJogos.size() + 1, Globais.getCodUtilizadorAtivo(), Globais.getCodUtilizadorConvidado(), Globais.getUsernameUtilizadorAtivo(), Globais.getUsernameUtilizadorConvidado(), Globais.getPasswordUtilizadorAtivo(), Globais.getPasswordUtilizadorConvidado(), "Player1 Ganhou"));
 			alertBox("Match", "Player1 Ganhou!");
 			
 			//Player1
 			
 			//Estrutura de controlo para inserir a vitótia na conta do utilizador ativo caso seja jogador
-			for(i = 0; i < Globais.listaJogadores.size(); i++) {
+			for(i = 0; i < UtilsSQLConn.carregaListaJogadores().size(); i++) {
 				if(Globais.listaJogadores.get(i).getCodJogador() == Globais.getCodUtilizadorAtivo() &&
 				   Globais.listaJogadores.get(i).getUsername().equals(Globais.getUsernameUtilizadorAtivo())) {
 					Globais.listaJogadores.get(i).setNumVitorias(Globais.listaJogadores.get(i).getNumVitorias() + 1);
@@ -1916,7 +2214,16 @@ public class Utils {
 		//Se o jogador o ganhou
 		else if(Globais.getVencedor() == 2) {
 			//Cria o registo do jogo
-			Globais.listaJogos.add(new Jogo(Globais.listaJogos.size() + 1, Globais.getCodUtilizadorAtivo(), Globais.getCodUtilizadorConvidado(), Globais.getUsernameUtilizadorAtivo(), Globais.getUsernameUtilizadorConvidado(), "Player2 Ganhou"));
+			//O código do jogador faz automaticamente a iteração
+			UtilsSQLConn.mySqlDml("Insert into jogar"				// Tabela jogar
+					+" (CodJogador1, CodJogador2, UsernameJogador1, UsernameJogador2, PasswordJogador1, PasswordJogador2, Resultado, Carimbo)"	// Nomes Colunas
+					+" Values("+Globais.getCodUtilizadorAtivo()+", "+Globais.getCodUtilizadorConvidado()+", '"+Globais.getUsernameUtilizadorAtivo()+"', '"+Globais.getUsernameUtilizadorConvidado()+"', '"+Globais.getPasswordUtilizadorAtivo()+"', '"+Globais.getPasswordUtilizadorConvidado()+"', '"+"Player2 Ganhou"+"', "+false+")");	// Dados
+			/*NOTAS:
+			 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+			 * 2 - os campos numéricos não têm.
+			 * */
+			
+			//Globais.listaJogos.add(new Jogo(Globais.listaJogos.size() + 1, Globais.getCodUtilizadorAtivo(), Globais.getCodUtilizadorConvidado(), Globais.getUsernameUtilizadorAtivo(), Globais.getUsernameUtilizadorConvidado(), Globais.getPasswordUtilizadorAtivo(), Globais.getPasswordUtilizadorConvidado(), "Player2 Ganhou"));
 			alertBox("Match", "Player2 Ganhou!");
 			
 			//Player1
@@ -1956,7 +2263,16 @@ public class Utils {
 		//Se houve empate
 		else if(Globais.getVencedor() == 3) {
 			//Cria o registo do jogo
-			Globais.listaJogos.add(new Jogo(Globais.listaJogos.size() + 1, Globais.getCodUtilizadorAtivo(), Globais.getCodUtilizadorConvidado(), Globais.getUsernameUtilizadorAtivo(), Globais.getUsernameUtilizadorConvidado(), "Empate"));
+			//O código do jogador faz automaticamente a iteração
+			UtilsSQLConn.mySqlDml("Insert into jogar"				// Tabela jogar
+					+" (CodJogador1, CodJogador2, UsernameJogador1, UsernameJogador2, PasswordJogador1, PasswordJogador2, Resultado, Carimbo)"	// Nomes Colunas
+					+" Values("+Globais.getCodUtilizadorAtivo()+", "+Globais.getCodUtilizadorConvidado()+", '"+Globais.getUsernameUtilizadorAtivo()+"', '"+Globais.getUsernameUtilizadorConvidado()+"', '"+Globais.getPasswordUtilizadorAtivo()+"', '"+Globais.getPasswordUtilizadorConvidado()+"', '"+"Empate"+"', "+false+")");	// Dados
+			/*NOTAS:
+			 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+			 * 2 - os campos numéricos não têm.
+			 * */
+			
+			//Globais.listaJogos.add(new Jogo(Globais.listaJogos.size() + 1, Globais.getCodUtilizadorAtivo(), Globais.getCodUtilizadorConvidado(), Globais.getUsernameUtilizadorAtivo(), Globais.getUsernameUtilizadorConvidado(), Globais.getPasswordUtilizadorAtivo(), Globais.getPasswordUtilizadorConvidado(), "Empate"));
 			alertBox("Match", "Empate!");
 			
 			//Player1
@@ -2032,7 +2348,7 @@ public class Utils {
 			else {
 				//Estrutura de controlo para verificar se o username e password estão na lista de jogadores
 				for(i = 0; i < Globais.listaJogadores.size(); i++) {
-					if(Globais.listaJogadores.get(i).getUsername().equals(textFieldUserName.getText())) {
+					if(UtilsSQLConn.carregaListaJogadores().get(i).getUsername().equals(textFieldUserName.getText())) {
 						criacaoNegada = true;
 					}
 				}
@@ -2040,20 +2356,47 @@ public class Utils {
 				//System.out.println(passwordFieldPassword.getText());
 				//Estrutura de controlo para verificar se o username e password estão na lista de administradores
 				for(i = 0; i < Globais.listaAdministradores.size(); i++) {
-					if(Globais.listaAdministradores.get(i).getUsername().equals(textFieldUserName.getText())) {
+					if(UtilsSQLConn.carregaListaAdministradores().get(i).getUsername().equals(textFieldUserName.getText())) {
 						criacaoNegada = true;
 					}
 				}
 				//Estrutura de controlo para verificar se o username e password estão na lista de parametrizadores
 				for(i = 0; i < Globais.listaParametrizadores.size(); i++) {
-					if(Globais.listaParametrizadores.get(i).getUsername().equals(textFieldUserName.getText())) {
+					if(UtilsSQLConn.carregaListaParametrizador().get(i).getUsername().equals(textFieldUserName.getText())) {
 						criacaoNegada = true;
 					}
 				}
+				/*
+				if(UtilsSQLConn.mySqlQweryCheckPK("Select * from Jogador WHERE username = "+textFieldUserName.getText()+" and password = "+passwordFieldPassword.getText()+"")){
+					//Utils.alertBox("BD", "Utilizador já existe");
+					criacaoNegada = true;
+					
+				}else if(UtilsSQLConn.mySqlQweryCheckPK("Select * from Parametrizador WHERE username = "+textFieldUserName.getText()+" and password = "+passwordFieldPassword.getText()+"")){
+					//Utils.alertBox("BD", "Utilizador já existe");
+					criacaoNegada = true;
+				}
+				else if(UtilsSQLConn.mySqlQweryCheckPK("Select * from Administrador WHERE username = "+textFieldUserName.getText()+" and password = "+passwordFieldPassword.getText()+"")){
+					//Utils.alertBox("BD", "Utilizador já existe");
+					criacaoNegada = true;
+				}*/
 			}
 			
 			if(criacaoNegada == false) {
-				Globais.listaJogadores.add(new Jogador(Globais.listaJogadores.size() + 1, textFieldUserName.getText(), passwordFieldPassword.getText(), 0, 0, 0));
+				
+				// Executar o DML Insert, com os dados no formato correto
+				// Lembrar que o método Liga ao SGBD e abre a BD tictactoe
+				// Só é preciso passar o comando DML (insert, update, delete)
+				
+				//O código do jogador faz automaticamente a iteração
+				UtilsSQLConn.mySqlDml("Insert into jogador"					// Tabela Jogador
+						+" (Username, Password, NumVitorias, NumDerrotas, NumEmpates, Carimbo)"		// Nomes Colunas
+						+" Values('"+textFieldUserName.getText()+"', '"+passwordFieldPassword.getText()+"', "+0+", "+0+", "+0+", "+false+")");	// Dados
+				/*NOTAS:
+				 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+				 * 2 - os campos numéricos não têm.
+				 * */
+				
+				//Globais.listaJogadores.add(new Jogador(Globais.listaJogadores.size() + 1, textFieldUserName.getText(), passwordFieldPassword.getText(), 0, 0, 0));
 			}
 			else {
 				alertBox("Erro", "Conta de utilizador não disponível!");
@@ -2138,10 +2481,38 @@ public class Utils {
 			
 			if(criacaoNegada == false) {
 				if(comboBox.getValue() == "Jogador") {
-					Globais.listaJogadores.add(new Jogador(Globais.listaJogadores.size() + 1, textFieldUserName.getText(), passwordFieldPassword.getText(), 0, 0, 0));
+					
+					// Executar o DML Insert, com os dados no formato correto
+					// Lembrar que o método Liga ao SGBD e abre a BD tictactoe
+					// Só é preciso passar o comando DML (insert, update, delete)
+					
+					//O código do jogador faz automaticamente a iteração
+					UtilsSQLConn.mySqlDml("Insert into jogador"				// Tabela Jogador
+							+" (Username, Password, NumVitorias, NumDerrotas, NumEmpates, Carimbo)"	// Nomes Colunas
+							+" Values('"+textFieldUserName.getText()+"', '"+passwordFieldPassword.getText()+"', "+0+", "+0+", "+0+", "+false+")");	// Dados
+					/*NOTAS:
+					 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+					 * 2 - os campos numéricos não têm.
+					 * */
+					
+					//Globais.listaJogadores.add(new Jogador(Globais.listaJogadores.size() + 1, textFieldUserName.getText(), passwordFieldPassword.getText(), 0, 0, 0));
 				}
 				else if(comboBox.getValue() == "Parametrizador") {
-					Globais.listaParametrizadores.add(new Parametrizador(Globais.listaParametrizadores.size() + 1, textFieldUserName.getText(), passwordFieldPassword.getText()));
+					
+					// Executar o DML Insert, com os dados no formato correto
+					// Lembrar que o método Liga ao SGBD e abre a BD tictactoe
+					// Só é preciso passar o comando DML (insert, update, delete)
+					
+					//O código do parametrizador faz automaticamente a iteração
+					UtilsSQLConn.mySqlDml("Insert into parametrizador"				// Tabela Parametrizador
+							+" (Username, Password, Carimbo)"	// Nomes Colunas
+							+" Values('"+textFieldUserName.getText()+"', '"+passwordFieldPassword.getText()+"', "+false+")");	// Dados
+					/*NOTAS:
+					 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+					 * 2 - os campos numéricos não têm.
+					 * */
+					
+					//Globais.listaParametrizadores.add(new Parametrizador(Globais.listaParametrizadores.size() + 1, textFieldUserName.getText(), passwordFieldPassword.getText()));
 				}
 				else {
 					alertBox("Erro", "Não escolheu o tipo de utilizador!");
@@ -2199,10 +2570,28 @@ public class Utils {
 				recNegada = true;
 				
 				//Estrutura de controlo para verificar se o username e password estão na lista de jogadores
-				for(i = 0; i < Globais.listaJogadores.size(); i++) {
-					if(Globais.listaJogadores.get(i).getUsername().equals(textFieldUserName.getText())) {
+				for(i = 0; i < UtilsSQLConn.carregaListaJogadores().size(); i++) {
+					if(UtilsSQLConn.carregaListaJogadores().get(i).getUsername().equals(textFieldUserName.getText())) {
 						recNegada = false;
-						Globais.listaRecContas.add(new Recuperacao(Globais.listaRecContas.size() + 1, Globais.listaJogadores.get(i).getCodJogador(),textFieldUserName.getText(), Globais.listaJogadores.get(i).getPassword()));
+						
+						//UtilsSQLConn.mySqlDml("Select username from jogador WHERE username = "+textFieldUserName.getText()+"");
+							
+						if(UtilsSQLConn.mySqlQweryCheckPK("Select username from jogador WHERE username = "+textFieldUserName.getText()+"")){	
+							Utils.alertBox("BD", "PK nProc já existe");
+						}
+						else {
+							//O código do parametro faz automaticamente a iteração
+							UtilsSQLConn.mySqlDml("Insert into recuperacao"			// Tabela Recuperacao
+									+" (CodJogador, Username, Password, Carimbo)"	// Nomes Colunas
+									+" Values("+123+", '"+textFieldUserName.getText()+"', '"+"Pass"+"', "+false+")");	// Dados
+							/*NOTAS:
+							 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+							 * 2 - os campos numéricos não têm.
+							 * */
+							
+							//Globais.listaRecContas.add(new Recuperacao(Globais.listaRecContas.size() + 1, Globais.listaJogadores.get(i).getCodJogador(),textFieldUserName.getText(), Globais.listaJogadores.get(i).getPassword()));
+						}
+						
 					}
 				}
 				
@@ -2269,10 +2658,30 @@ public class Utils {
 			
 			if(criacaoNegada == false) {
 				if(comboBox.getValue() == "Alerta") {
-					Globais.listaVarLimites.add(new Parametro(Globais.listaVarLimites.size() + 1, Globais.listaVarLimites.size() + 1, textFieldVariavel.getText(), "Alerta", textFieldLimMax.getText(), textFieldLimMin.getText()));
+					
+					//O código do parametro faz automaticamente a iteração
+					UtilsSQLConn.mySqlDml("Insert into parametrizacao"				// Tabela jogar
+							+" (codVar, Variavel, TipoVar, LimiteMin, LimiteMax, Carimbo)"	// Nomes Colunas
+							+" Values("+123+", '"+textFieldVariavel.getText()+"', '"+"Alerta"+"', '"+textFieldLimMin.getText()+"', '"+textFieldLimMax.getText()+"', "+false+")");	// Dados
+					/*NOTAS:
+					 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+					 * 2 - os campos numéricos não têm.
+					 * */
+					
+					//Globais.listaVarLimites.add(new Parametro(Globais.listaVarLimites.size() + 1, Globais.listaVarLimites.size() + 1, textFieldVariavel.getText(), "Alerta", textFieldLimMax.getText(), textFieldLimMin.getText()));
 				}
 				else if(comboBox.getValue() == "Funcional") {
-					Globais.listaVarLimites.add(new Parametro(Globais.listaVarLimites.size() + 1, Globais.listaVarLimites.size() + 1, textFieldVariavel.getText(), "Funcional", textFieldLimMax.getText(), textFieldLimMin.getText()));
+					
+					//O código do parametro faz automaticamente a iteração
+					UtilsSQLConn.mySqlDml("Insert into parametrizacao"				// Tabela jogar
+							+" (codVar, Variavel, TipoVar, LimiteMin, LimiteMax, Carimbo)"	// Nomes Colunas
+							+" Values("+123+", '"+textFieldVariavel.getText()+"', '"+"Funcional"+"', '"+textFieldLimMin.getText()+"', '"+textFieldLimMax.getText()+"', "+false+")");	// Dados
+					/*NOTAS:
+					 * 1 - os campos alfabéticos têm que ser envolvidos em plicas
+					 * 2 - os campos numéricos não têm.
+					 * */
+					
+					//Globais.listaVarLimites.add(new Parametro(Globais.listaVarLimites.size() + 1, Globais.listaVarLimites.size() + 1, textFieldVariavel.getText(), "Funcional", textFieldLimMax.getText(), textFieldLimMin.getText()));
 				}
 				else {
 					alertBox("Erro", "Não escolheu o tipo de utilizador!");
@@ -2300,5 +2709,4 @@ public class Utils {
 		janelaInserirVarLimites.setScene(scene);		//Associa a Scena 
 		janelaInserirVarLimites.showAndWait();			//Executa e prende o controlo até ser fechada
 	}
-	
 }

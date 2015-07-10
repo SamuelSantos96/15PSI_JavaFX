@@ -53,6 +53,17 @@ public class Jogo {
 		this.resultado = resultado;
 	}
 	
+	public Jogo(int codJogo, int codJogador1, int codJogador2, String usernameJogador1, String usernameJogador2, String passwordJogador1, String passwordJogador2, String resultado) {
+		this.codJogo = codJogo;
+		this.codJogador1 = codJogador1;
+		this.codJogador2 = codJogador2;
+		this.usernameJogador1 = usernameJogador1;
+		this.usernameJogador2 = usernameJogador2;
+		this.passwordJogador1 = passwordJogador1;
+		this.passwordJogador2 = passwordJogador2;
+		this.resultado = resultado;
+	}
+	
 	//Getters e Setters
 	public String getUsernameJogador1() {
 		return usernameJogador1;

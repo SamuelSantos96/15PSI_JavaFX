@@ -187,7 +187,7 @@ public class UtilsSQLConn {
 					Statement stmt = conn.createStatement();		// Cria um obj comando sql
 					int dmlResult = stmt.executeUpdate(dml);		// Executa-o. Devolve o nº de registos tratados
 					if (dmlResult > 0){								// Devolve inteiro > 0 se ok
-						Utils.alertBox("DB","Comando DML OK");		// 0 ou menor, se ERRO.
+						//Utils.alertBox("DB","Comando DML OK");		// 0 ou menor, se ERRO.
 					}
 					else{
 						

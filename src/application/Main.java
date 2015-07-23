@@ -34,7 +34,11 @@ public class Main extends Application {
 		 * 2 - os campos numéricos não têm.
 		 * */
 		
-		Globais.listaAdministradores.add(new Administrador(Globais.listaAdministradores.size() + 1, "123", "123", 0, 0, 0));
+		//Cria o único administrador
+		if(Globais.listaAdministradores.size() == 0) {
+			Globais.listaAdministradores.add(new Administrador(Globais.listaAdministradores.size() + 1, "123", "123", 0, 0, 0));
+		}
+		
 		/*
 		//Parâmetros
 		Globais.listaVarLimites.add(new Parametro(1, 1));
